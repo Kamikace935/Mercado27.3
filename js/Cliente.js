@@ -66,8 +66,10 @@ function actualizarTablaProductos(productos) {
         tablaResultados.appendChild(fila);
     });
 }
-
+//Funcionalidades del carrtio
 function anadirCarrito(cantidad, producto) {
+    let carro=JSON.parse(localStorage.getItem("carro"))||[];  // Array carroo!!!
+
     if(!Number.isInteger(cantidad)) {
         alert("Debe introducir la cantidad númerica");
     } else if(cantidad > producto.stock && producto.stock!==0) {
@@ -83,8 +85,6 @@ function anadirCarrito(cantidad, producto) {
     }else {
         const carrito = document.getElementById("productos-carrito");
         console.log(carrito)
-
-        let carro=JSON.parse(localStorage.getItem("carro"))||[];  // Array carroo!!!
 
         let fila = document.createElement("tr");
 
@@ -120,18 +120,18 @@ function anadirCarrito(cantidad, producto) {
         localStorage.setItem("carro",JSON.stringify(carro));
         carrito.appendChild(fila);
     }
+    let total = document.getElementById("total");
+    total.textContent = carro.importe.reduce((a,c) => a + c)+"€";
 }
 
 function  actualizarCarro(producto,cantidad) {
 
-    let productoCarro={
+    return {
         codigo: producto.codigo,
         descripcion: producto.descripcion,
         pUnitario: producto.importe,
         cantidad: cantidad,
         importe: producto.importe*cantidad
-
-
     };
 
 }
@@ -146,12 +146,16 @@ function quitarProducto(fila,producto,cantidad) {
     fila.outerHTML="";
 }
 
+function limpiarCarro() {
+    document.getElementById("productos-carrito").innerHTML = "";
+    localStorage.setItem("carro", JSON.stringify([]));
+}
+
+//Pago y reduccion de stock
 function pagarBoton() {
-    const montoAPagar = obtenerMontoAPagar();
-    const stockActual = obtenerStockActual();
 
-    if (montoAPagar > 0 && stockActual > 0) {
 
+    if (pagoTotal > 0 && stockTotal > 0) {
         const pasarelaPago = new Promise((resolve) => {
             setTimeout(() => {
                 resolve();
@@ -160,11 +164,7 @@ function pagarBoton() {
 
         // Actualizar el stock en el localstorage
         const actualizarStock = new Promise((resolve) => {
-            // Obtenemos el stock actual y lo actualizamos restando la cantidad de productos que se vendieron
-            const stockActual = obtenerStockActual();
-            const cantidadAVender = obtenerCantidadAVender();
-            const nuevoStock = stockActual - cantidadAVender;
-            localStorage.setItem("stock", nuevoStock);
+
             resolve();
         });
 
@@ -179,39 +179,4 @@ function pagarBoton() {
             });
     }
 }
-function actualizarStatusTransaccion(item, quantity){
 
-    return new Promise((resolve) => {
-        try {
-            const currentStock = JSON.parse(localStorage.getItem('productos'));
-            const carro  = JSON.parse(localStorage.getItem('carro'));
-            currentStock.map(producto=>{
-                carro.forEach(carro=>{
-                    if(producto.descripcion==carro.descripcion){
-                        producto.stock -= carro.cantidad
-                    }});
-            });
-            localStorage.setItem('productos', JSON.stringify(currentStock));
-
-            resolve();
-        } catch (error) {
-            console.log("Error")
-        }
-
-    });
-}
-
-// Agrega esta función en tu código para llamarla al hacer clic en el botón de pago
-function processPayment() {
-    // ... código para procesar el pago ...
-
-    // Luego, actualiza el stock en localStorage utilizando la promesa
-    const itemsToPurchase = getItemsToPurchaseFromCart(); // función para obtener los elementos del carrito
-    itemsToPurchase.forEach((item) => {
-        updateStockInLocalStorage(item.id, item.quantity)
-            .then(() => console.log(`Stock actualizado para ${item.name}`))
-            .catch((error) => console.error(error));
-    });
-
-    // ... más código para finalizar el proceso de pago ...
-}

@@ -1,3 +1,12 @@
 th{
     border: 1px solid black;
 }
+
+div{
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+p{
+    display: inline;
+}

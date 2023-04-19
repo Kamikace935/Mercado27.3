@@ -41,10 +41,16 @@
                 <th>Importe</th>
             </tr>
         </thead>
-        <tbody id="productos-carrito">
-        </tbody>
+        <tbody id="productos-carrito"></tbody>
     </table>
+    <hr>
+    <div>
+        <p>Total:</p>
+        <p id="total">2</p>
+    </div>
     <button type="submit" id="pagarBoton" onclick="pagarBoton()">Pagar</button>
+    <button type="submit" id="vaciar" onclick="limpiarCarro()">Vaciar Carrito</button>
+
     <script src="../js/Cliente.js"></script>
 </body>
 </html>
