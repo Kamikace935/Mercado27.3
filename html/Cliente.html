@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cliente</title>
+    <link rel="stylesheet" href="../css/Cliente.css">
+</head>
+<body>
+    <h2>Lista de productos</h2>
+
+    <label for="buscador">Buscador:</label>
+    <label for="campo-busqueda"></label><select id="campo-busqueda" name="campo-busqueda">
+        <option value="codigo">Código Producto</option>
+        <option value="descripcion">Descripción</option>
+    </select>
+    <input type="text" id="buscador" name="buscador"><br/>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Código Producto</th>
+                <th>Descripción</th>
+                <th>Importe</th>
+                <th>Stock</th>
+            </tr>
+        </thead>
+        <tbody id="resultados-busqueda">
+        </tbody>
+    </table>
+
+    <br><br><hr>
+
+    <h2>Carrito de la compra</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Código Producto</th>
+                <th>Descripción</th>
+                <th>Precio unitario</th>
+                <th>Cantidad</th>
+                <th>Importe</th>
+            </tr>
+        </thead>
+        <tbody id="productos-carrito">
+        </tbody>
+    </table>
+    <button type="submit" id="pagarBoton" onclick="pagarBoton()">Pagar</button>
+    <script src="../js/Cliente.js"></script>
+</body>
+</html>
