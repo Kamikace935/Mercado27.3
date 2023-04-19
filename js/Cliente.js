@@ -84,7 +84,6 @@ function anadirCarrito(cantidad, producto) {
         alert("Valor introducido incorrecto");
     }else {
         const carrito = document.getElementById("productos-carrito");
-        console.log(carrito)
 
         let fila = document.createElement("tr");
 
@@ -113,15 +112,16 @@ function anadirCarrito(cantidad, producto) {
 
         const quitar = document.createElement("button");
         quitar.textContent = "Quitar"
-        quitar.addEventListener("click", function(){quitarProducto(fila,producto, cantidad)});
+        quitar.addEventListener("click", function(){quitarProducto(fila,producto)});
         fila.appendChild(quitar);
 
         carro.push(actualizarCarro(producto,cantidad));
         localStorage.setItem("carro",JSON.stringify(carro));
         carrito.appendChild(fila);
     }
+
     let total = document.getElementById("total");
-    total.textContent = carro.importe.reduce((a,c) => a + c)+"€";
+    total.textContent = carro.reduce((total,producto) => total + producto.importe,0).toFixed(2)+"€";
 }
 
 function  actualizarCarro(producto,cantidad) {
@@ -141,8 +141,10 @@ function recomendacion(producto) {
     let letra = producto[0];
     return productos.filter(recomendacion => recomendacion.descripcion.startsWith(letra) && recomendacion.descripcion !== producto && parseInt(recomendacion.stock)!==0);}
 
-function quitarProducto(fila,producto,cantidad) {
-    producto.stock += cantidad;
+function quitarProducto(fila,producto) {
+    let carro = JSON.parse(localStorage.getItem("carro"));
+    let index = carro.findIndex(articulo => articulo.descripcion === producto.descripcion);
+    carro.splice(index,1);
     fila.outerHTML="";
 }
 
@@ -152,31 +154,33 @@ function limpiarCarro() {
 }
 
 //Pago y reduccion de stock
-function pagarBoton() {
+function botonPagar() {
+    const pasarelaPago = new Promise((resolve,reject) => {
+        setTimeout(() => {
+            const random = Math.round(Math.random() * 100);
+            if(random >= 29){
+                resolve(1);
+            } else {
+                reject(2);
+            }
+        }, 1000);
+    });
 
+    // Actualizar el stock en el localstorage
+    const actualizarStock = new Promise((resolve) => {
 
-    if (pagoTotal > 0 && stockTotal > 0) {
-        const pasarelaPago = new Promise((resolve) => {
-            setTimeout(() => {
-                resolve();
-            }, 1000);
-        });
+        resolve();
+    });
 
-        // Actualizar el stock en el localstorage
-        const actualizarStock = new Promise((resolve) => {
-
-            resolve();
-        });
-
-        // Esperar a que ambas acciones hayan finalizado para actualizar el status de la transacción
-        Promise.all([pasarelaPago, actualizarStock]).then(() => {
-            actualizarStatusTransaccion("completada");
-        })
-            .catch(razon=>{
-                if(razon==="s"){
-                    alert("No se ha podido realizar la transacción")
-                }
-            });
-    }
+    // Esperar a que ambas acciones hayan finalizado para actualizar el status de la transacción
+    Promise.all([pasarelaPago, actualizarStock]).then(() => {
+        actualizarStatusTransaccion("completada");
+    })
+        .catch(razon=>{
+            if(razon==="s"){
+                alert("No se ha podido realizar la transacción")
+            }
+        }
+    );
 }
 
