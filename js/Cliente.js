@@ -139,7 +139,6 @@ function  actualizarCarro(producto,cantidad) {
 function recomendacion(producto) {
    let productos= JSON.parse(localStorage.getItem("productos"));
     let letra = producto[0];
-
     return productos.filter(recomendacion => recomendacion.descripcion.startsWith(letra) && recomendacion.descripcion !== producto && parseInt(recomendacion.stock)!==0);}
 
 function quitarProducto(fila,producto,cantidad) {
