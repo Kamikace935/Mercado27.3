@@ -1,21 +1,33 @@
-th{
+th {
     border: 1px solid black;
 }
 
-div{
+div {
     margin-top: 8px;
     margin-bottom: 8px;
 }
 
-p{
+p {
     display: inline;
 }
 
-footer{
+footer {
     position: fixed;
     bottom: 0;
     background-color: aquamarine;
     width: 100%;
     text-align: right;
     padding-right: 20px;
+}
+
+.imagen:hover {
+    display: block;
+    position: absolute;
+    z-index: 1;
+}
+
+.imagen {
+    display: none;
+    height: 100px;
+    width: 100px;
 }

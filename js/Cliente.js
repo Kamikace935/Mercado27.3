@@ -43,6 +43,8 @@ function actualizarTablaProductos(productos) {
 
         const descripcion = document.createElement("td");
         descripcion.textContent = producto.descripcion;
+        const imagen = imagenProducto(producto);
+        descripcion.appendChild(imagen);
         fila.appendChild(descripcion);
 
         const importe = document.createElement("td");
@@ -66,6 +68,26 @@ function actualizarTablaProductos(productos) {
         tablaResultados.appendChild(fila);
     });
 }
+
+function imagenProducto(producto) {
+    let imagen = document.createElement("img")
+    const imagenes = [
+        "../img/producto1.png",
+        "../img/producto2.png",
+        "../img/producto3.png",
+        "../img/producto4.png",
+        "../img/producto5.png",
+        "../img/producto6.png",
+        "../img/producto7.jpg"
+    ];
+
+    imagen.src = imagenes[Math.floor(Math.random()* imagenes.length)];
+    imagen.alt = producto.descripcion;
+    imagen.classList.add("imagen");
+
+    return imagen;
+}
+
 //Funcionalidades del carrtio
 function anadirCarrito(cantidad, producto) {
     let carro=JSON.parse(localStorage.getItem("carro"))||[];  // Array carroo!!!
@@ -94,7 +116,8 @@ function anadirCarrito(cantidad, producto) {
 
         const descripcion = document.createElement("td");
         descripcion.textContent = producto.descripcion;
-        descripcion.setAttribute("id", producto.descripcion)
+        const imagen = imagenProducto(producto);
+        descripcion.appendChild(imagen);
         fila.appendChild(descripcion);
 
         const importe = document.createElement("td");
