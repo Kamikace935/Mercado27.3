@@ -175,7 +175,7 @@ function botonPagar() {
             } else {
                 reject(1);
             }
-        }, 3000);
+        }, 2000);
     });
 
     // Actualizar el stock en el localstorage
@@ -183,7 +183,7 @@ function botonPagar() {
         setTimeout(() => {
             const random = Math.round(Math.random() * 100)
            if(random >= 21) {
-               var productos = JSON.parse(localStorage.getItem("productos"));
+               let productos = JSON.parse(localStorage.getItem("productos"));
                const carro = JSON.parse(localStorage.getItem("carro"));
 
                carro.forEach(articulo => {
@@ -196,25 +196,30 @@ function botonPagar() {
            } else {
                reject(2);
            }
-        }, 2000);
+        }, 5000);
 
     });
 
-    // Esperar a que ambas acciones hayan finalizado para actualizar el status de la transacción
-    Promise.all([pasarelaPago, actualizarStock]).then(() => {
-        actualizarStatusTransaccion("La transaccion fue realizada correctamente");
-    })
+    //
+    Promise.all([pasarelaPago, actualizarStock])
+        .then(() => {
+            alert("La transaccion fue realizada correctamente");
+            document.body.innerHTML = `<h1>Gracias por su compra</h1>`
+            setTimeout(function() {
+                window.location.href = "ipse-lorum.html";
+            }, 4000);
+        })
         .catch(razon=>{
             if(razon===1) {
-                alert("No se ha podido realizar la transacción")
+                alert("No se ha podido realizar la transacción");
             }else if(razon===2) {
-                var productos = JSON.parse(localStorage.getItem("productos"));
+                let productos = JSON.parse(localStorage.getItem("productos"));
                 const carro = JSON.parse(localStorage.getItem("carro"));
                 carro.forEach(articulo => {
                     let index = productos.findIndex(producto => producto.descripcion === articulo.descripcion);
                     productos[index].stock += articulo.stock;
                 })
-                alert("No hay existencias suficientes para uno de los productos seleccionados")
+                alert("No hay existencias suficientes para uno de los productos seleccionados");
             }
         }
     );
