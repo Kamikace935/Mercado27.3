@@ -37,4 +37,9 @@ td:hover .imagen {
     width: 100px;
 }
 
+div.bloqueado{
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5;
 
+}
