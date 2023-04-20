@@ -170,10 +170,10 @@ function botonPagar() {
     const pasarelaPago = new Promise((resolve,reject) => {
         setTimeout(() => {
             const random = Math.round(Math.random() * 100);
-            if(random >= 15){
-                resolve(1);
+            if(random >= 31){
+                resolve(0);
             } else {
-                reject(2);
+                reject(1);
             }
         }, 3000);
     });
@@ -182,7 +182,7 @@ function botonPagar() {
     const actualizarStock = new Promise((resolve,reject) => {
         setTimeout(() => {
             const random = Math.round(Math.random() * 100)
-           if(random >= 5) {
+           if(random >= 21) {
                var productos = JSON.parse(localStorage.getItem("productos"));
                const carro = JSON.parse(localStorage.getItem("carro"));
 
@@ -192,9 +192,9 @@ function botonPagar() {
                })
 
                localStorage.setItem("productos", JSON.stringify(productos));
-               resolve(3);
+               resolve(0);
            } else {
-               reject(4);
+               reject(2);
            }
         }, 2000);
 
@@ -202,11 +202,19 @@ function botonPagar() {
 
     // Esperar a que ambas acciones hayan finalizado para actualizar el status de la transacción
     Promise.all([pasarelaPago, actualizarStock]).then(() => {
-        actualizarStatusTransaccion("completada");
+        actualizarStatusTransaccion("La transaccion fue realizada correctamente");
     })
         .catch(razon=>{
-            if(razon===""){
+            if(razon===1) {
                 alert("No se ha podido realizar la transacción")
+            }else if(razon===2) {
+                var productos = JSON.parse(localStorage.getItem("productos"));
+                const carro = JSON.parse(localStorage.getItem("carro"));
+                carro.forEach(articulo => {
+                    let index = productos.findIndex(producto => producto.descripcion === articulo.descripcion);
+                    productos[index].stock += articulo.stock;
+                })
+                alert("No hay existencias suficientes para uno de los productos seleccionados")
             }
         }
     );
