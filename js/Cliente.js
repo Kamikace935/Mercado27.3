@@ -120,12 +120,10 @@ function anadirCarrito(cantidad, producto) {
         carrito.appendChild(fila);
     }
 
-    let total = document.getElementById("total");
-    total.textContent = carro.reduce((total,producto) => total + producto.importe,0).toFixed(2)+"€";
+    actualizarPrecio(carro);
 }
 
 function  actualizarCarro(producto,cantidad) {
-
     return {
         codigo: producto.codigo,
         descripcion: producto.descripcion,
@@ -133,24 +131,38 @@ function  actualizarCarro(producto,cantidad) {
         cantidad: cantidad,
         importe: producto.importe*cantidad
     };
-
 }
 
 function recomendacion(producto) {
    let productos= JSON.parse(localStorage.getItem("productos"));
     let letra = producto[0];
-    return productos.filter(recomendacion => recomendacion.descripcion.startsWith(letra) && recomendacion.descripcion !== producto && parseInt(recomendacion.stock)!==0);}
+    return productos.filter(recomendacion => recomendacion.descripcion.startsWith(letra) && recomendacion.descripcion !== producto && parseInt(recomendacion.stock)!==0);
+}
 
 function quitarProducto(fila,producto) {
     let carro = JSON.parse(localStorage.getItem("carro"));
     let index = carro.findIndex(articulo => articulo.descripcion === producto.descripcion);
     carro.splice(index,1);
     fila.outerHTML="";
+    actualizarPrecio(carro);
+    localStorage.setItem("carro", JSON.stringify(carro));
 }
 
 function limpiarCarro() {
     document.getElementById("productos-carrito").innerHTML = "";
     localStorage.setItem("carro", JSON.stringify([]));
+
+    let total = document.getElementById("total");
+    total.textContent = "0.00€";
+}
+
+function actualizarPrecio(carro) {
+    let total = document.getElementById("total");
+    if(carro.length > 0){
+        total.textContent = carro.reduce((total,producto) => total + producto.importe,0).toFixed(2)+"€";
+    } else {
+        total.textContent = "0.00€";
+    }
 }
 
 //Pago y reduccion de stock
@@ -158,18 +170,34 @@ function botonPagar() {
     const pasarelaPago = new Promise((resolve,reject) => {
         setTimeout(() => {
             const random = Math.round(Math.random() * 100);
-            if(random >= 29){
+            if(random >= 15){
                 resolve(1);
             } else {
                 reject(2);
             }
-        }, 1000);
+        }, 3000);
     });
 
     // Actualizar el stock en el localstorage
-    const actualizarStock = new Promise((resolve) => {
+    const actualizarStock = new Promise((resolve,reject) => {
+        setTimeout(() => {
+            const random = Math.round(Math.random() * 100)
+           if(random >= 5) {
+               var productos = JSON.parse(localStorage.getItem("productos"));
+               const carro = JSON.parse(localStorage.getItem("carro"));
 
-        resolve();
+               carro.forEach(articulo => {
+                   let index = productos.findIndex(producto => producto.descripcion === articulo.descripcion);
+                   productos[index].stock -= articulo.stock;
+               })
+
+               localStorage.setItem("productos", JSON.stringify(productos));
+               resolve(3);
+           } else {
+               reject(4);
+           }
+        }, 2000);
+
     });
 
     // Esperar a que ambas acciones hayan finalizado para actualizar el status de la transacción
@@ -177,7 +205,7 @@ function botonPagar() {
         actualizarStatusTransaccion("completada");
     })
         .catch(razon=>{
-            if(razon==="s"){
+            if(razon===""){
                 alert("No se ha podido realizar la transacción")
             }
         }

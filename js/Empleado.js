@@ -30,3 +30,7 @@ function guardarProducto() {
     document.getElementById("importe").value = "";
     document.getElementById("stock").value = "";
 }
+
+function limpiarProductos() {
+    localStorage.setItem("productos",JSON.stringify([]));
+}
