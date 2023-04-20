@@ -211,7 +211,10 @@ function botonPagar() {
         })
         .catch(razon=>{
             if(razon===1) {
-                alert("No se ha podido realizar la transacción");
+                history.pushState(null, null, "https://www.amazon.es");
+                window.onpopstate = function() {
+                    history.go(1);
+                };
             }else if(razon===2) {
                 let productos = JSON.parse(localStorage.getItem("productos"));
                 const carro = JSON.parse(localStorage.getItem("carro"));
