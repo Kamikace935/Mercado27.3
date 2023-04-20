@@ -252,12 +252,15 @@ function botonPagar() {
 }
 
 var bloquearEntrada = false;
+let contenedor = document.getElementById("bloqueado");
+
 document.addEventListener('contextmenu', event => {
     event.preventDefault(); // Prevenimos el menú contextual
     if (bloquearEntrada) {
         bloquearEntrada = false; // Desbloqueamos la entrada de información
         contenedor.classList.remove('bloqueado'); // Quitamos la clase 'bloqueado' del body
     } else {
+        
         bloquearEntrada = true; // Bloqueamos la entrada de información
         contenedor.classList.add('bloqueado'); // Agregamos la clase 'bloqueado' al body
     }
